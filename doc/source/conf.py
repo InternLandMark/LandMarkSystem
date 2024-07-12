@@ -9,6 +9,8 @@
 import os
 import sys
 
+sys.path.insert(0, os.path.abspath("../../"))
+
 project = "LandmarkSystem"
 copyright = "2024, landmark team"  # pylint: disable=W0622
 author = "landmark team"
@@ -27,8 +29,6 @@ extensions = [
     "myst_parser",
 ]
 
-sys.path.insert(0, os.path.abspath("../../"))
-
 templates_path = ["_templates"]
 exclude_patterns = []
 
@@ -38,6 +38,18 @@ source_suffix = {
     ".md": "markdown",
 }
 
+# GitHub integration
+html_context = {
+    "display_github": True,
+    "github_user": "InternLandMark",
+    "github_repo": "LandMarkSystem",
+    "github_version": "main",
+    "conf_py_path": "/doc/source/",
+}
+
+# sys.path.insert(0, "/home/doc/checkouts/readthedocs.org/user_builds/landmarksystem/checkouts/latest/")
+# sys.path.insert(0, "/home/doc/checkouts/readthedocs.org/user_builds/landmarksystem/checkouts/latest/landmark")
+# print(f"{sys.path=}")
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

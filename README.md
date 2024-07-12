@@ -28,19 +28,19 @@
     </font>
     </a>
     |
-    <a href="./docs/en/quickstart.md">
+    <a href="./doc/en/quickstart.md">
     <font size="4">
     📘Usage
     </font>
     </a>
     |
-    <a href="./docs/en/install.md">
+    <a href="./doc/en/install.md">
     <font size="4">
     🛠️Installation
     </font>
     </a>
     |
-    <a href="landmarksystem.readthedocs.io">
+    <a href="https://landmarksystem.readthedocs.io/zh-cn/latest/">
     <font size="4">
     📑Documentation
     </font>
@@ -81,21 +81,15 @@ In the table above, ✅ indicates that the feature is supported in the current v
 
 # 🚀 Quickstart
 
-Please refer to [Usage](./docs/en/quickstart.md) to start installation, training and rendering.
+Please refer to [Usage](./doc/en/quickstart.md) to start installation, training and rendering.
 
-For more details, please check [Documentation](landmarksystem.readthedocs.io).
+For more details, please check [Documentation](https://landmarksystem.readthedocs.io/zh-cn/latest/).
 
 # 📖Learn More
 
 For more information about the system architecture and training/rendering performance, please refer to our technical report (TBD).
 
-<!-- # 🤝 Authors
+# 🤝 Authors
 The main work comes from the LandMark Team, Shanghai AI Laboratory.<br>
 
 <img src="https://github.com/InternLandMark/LandMark_Documentation/blob/main/pictures/shailab_logo2.jpg?raw=true" width="450">
-
-Here are our honorable Contributors:
-
-<a href="https://github.com/InternLandMark/LandMarkSystem/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=InternLandMark/LandMarkSystem" />
-</a> -->

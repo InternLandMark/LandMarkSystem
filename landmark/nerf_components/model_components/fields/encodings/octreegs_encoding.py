@@ -8,7 +8,6 @@ import numpy as np
 import torch
 from einops import repeat
 from plyfile import PlyData, PlyElement
-from simple_knn._C import distCUDA2
 from torch import nn
 from torch_scatter import scatter_max
 
@@ -116,6 +115,7 @@ class OctreeGSEncoding(BaseGaussianEncoding):
         Returns:
             None
         """
+        from simple_knn._C import distCUDA2
         # Convert point cloud to tensor
         points = torch.tensor(pcd.points, device="cuda").float()
 

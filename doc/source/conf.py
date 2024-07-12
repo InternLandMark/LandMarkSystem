@@ -47,10 +47,6 @@ html_context = {
     "conf_py_path": "/doc/source/",
 }
 
-# sys.path.insert(0, "/home/doc/checkouts/readthedocs.org/user_builds/landmarksystem/checkouts/latest/")
-# sys.path.insert(0, "/home/doc/checkouts/readthedocs.org/user_builds/landmarksystem/checkouts/latest/landmark")
-# print(f"{sys.path=}")
-
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 

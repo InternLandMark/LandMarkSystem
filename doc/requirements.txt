@@ -2,10 +2,7 @@ Sphinx
 sphinx-autobuild
 sphinx_rtd_theme
 sphinx_markdown_tables
-autodoc_pydantic==1.9
+autodoc_pydantic
 enum_tools
-numpy
-torch
-tqdm
 pyecharts
 myst-parser

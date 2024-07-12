@@ -1,8 +1,11 @@
 # pylint: disable=E1136
 from typing import Optional
 
-import fusedKernels
-import FusedMatmul
+try:
+    import fusedKernels
+    import FusedMatmul
+except:
+    pass
 import torch
 
 from landmark.nerf_components.model_components.fields.anchor_decoder import (

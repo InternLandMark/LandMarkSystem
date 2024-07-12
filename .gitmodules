@@ -6,7 +6,7 @@
 	path = landmark/ops/fused_anchor_decoder
 	url = https://github.com/InternLandMark/FusedAnchorDecoder.git
 	branch = main
-[submodule "landmark/ops/simple-knn"]
+[submodule "simple-knn"]
 	path = landmark/ops/simple-knn
 	url = https://gitlab.inria.fr/bkerbl/simple-knn.git
 	branch = main

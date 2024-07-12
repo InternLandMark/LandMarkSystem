@@ -5,7 +5,6 @@ from typing import Any, Dict, Mapping, Union
 import numpy as np
 import torch
 from plyfile import PlyData, PlyElement
-from simple_knn._C import distCUDA2
 from torch import nn
 from torch_scatter import scatter_max
 
@@ -119,6 +118,7 @@ class ScaffoldGSEncoding(BaseGaussianEncoding):
         Returns:
             None
         """
+        from simple_knn._C import distCUDA2
         points = pcd.points
 
         if self.voxel_size <= 0:

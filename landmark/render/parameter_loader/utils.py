@@ -321,7 +321,7 @@ def update_merged_tensor(
     state_dicts,
     merged_state_dict,
     new_block_idxes,
-    cuda_stream=torch.cuda.current_stream(),
+    cuda_stream=None,
     non_blocking=False,
 ):
     block_num = len(state_dicts)
@@ -397,7 +397,7 @@ def broadcast_updated_tensor(
     state_dicts_num,
     merged_state_dict,
     event_dict=None,
-    cuda_stream=torch.cuda.current_stream(),
+    cuda_stream=None,
     async_op=True,
 ):
     if event_dict is None:

@@ -79,19 +79,15 @@ Components中提供了常用的算法组件，建议使用这里的组件进行�
     :members:
     :undoc-members:
 
-.. autoclass:: landmark.nerf_components.model_components.fields.mlp_decoder.MLPDecoder
+.. autoclass:: landmark.nerf_components.model_components.MLPDecoder
     :members:
     :undoc-members:
 
-.. autoclass:: landmark.nerf_components.model_components.fields.nerf_branch.NeRF
+.. autoclass:: landmark.nerf_components.model_components.NeRF
     :members:
     :undoc-members:
 
-.. autoclass:: landmark.nerf_components.model_components.renderers.volume_renderer.VolumeRenderer
-    :members:
-    :undoc-members:
-
-.. autoclass:: landmark.nerf_components.model_components.renderers.gaussian_splatting_rasterizer.GassianSplattingRasterizer
+.. autoclass:: landmark.nerf_components.model_components.VolumeRenderer
     :members:
     :undoc-members:
 

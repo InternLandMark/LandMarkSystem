@@ -4,7 +4,6 @@ from typing import Any, Dict, Mapping, Union
 import numpy as np
 import torch
 from plyfile import PlyData, PlyElement
-from simple_knn._C import distCUDA2
 from torch import nn
 
 from landmark.nerf_components.utils.general_utils import (
@@ -122,6 +121,7 @@ class GaussianEncoding(BaseGaussianEncoding):
         Returns:
             None
         """
+        from simple_knn._C import distCUDA2
         fused_point_cloud = torch.tensor(np.asarray(pcd.points)).float().cuda()
         fused_color = RGB2SH(torch.tensor(np.asarray(pcd.colors)).float().cuda())
         features = torch.zeros((fused_color.shape[0], 3, (self.max_sh_degree + 1) ** 2)).float().cuda()

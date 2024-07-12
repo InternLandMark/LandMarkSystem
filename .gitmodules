@@ -1,0 +1,16 @@
+[submodule "opt_gaussian_rasterization"]
+	path = landmark/ops/opt_gaussian_rasterization
+	url = https://github.com/InternLandMark/OptGaussianRasterization
+	branch = main
+[submodule "fused_anchor_decoder"]
+	path = landmark/ops/fused_anchor_decoder
+	url = https://github.com/InternLandMark/FusedAnchorDecoder.git
+	branch = main
+[submodule "landmark/ops/simple-knn"]
+	path = landmark/ops/simple-knn
+	url = https://gitlab.inria.fr/bkerbl/simple-knn.git
+	branch = main
+[submodule "3rdparty/cutlass"]
+	path = 3rdparty/cutlass
+	url = git@github.com:NVIDIA/cutlass.git
+	branch = main

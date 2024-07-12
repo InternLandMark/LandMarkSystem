@@ -1,0 +1,228 @@
+variables:
+  PYLINT_DISABLE_LIST: C0103,C0114,C0415,W0212,W0235,W0238
+  ISORT_PROFILE: black
+  BLACK_EXCLUDE_SETTINGS: '\.venv/|\.local/|\.cache/|\.git/'
+  conda_environment: /mnt/petrelfs/landmarks/env/nerf
+  s_cluster_IP: 10.140.0.33
+  run_account: landmarks
+
+stages:
+  - lint
+  - unit-test
+  - training-test
+  - torch-integrity-test
+  - kernel-integrity-test
+  - release-test
+  - deploy
+
+lint-flake8:
+  stage: lint
+  tags:
+    - landmark_sys_ci
+  script:
+    - echo "Linting code using flake8."
+    - source ${conda_environment}
+    - flake8 --ignore=E203,W503 --per-file-ignores=app/models/__init__.py:F401 --max-line-length=120 ./*/
+
+lint-pylint:
+  stage: lint
+  tags:
+    - landmark_sys_ci
+  allow_failure: true
+  script:
+    - echo "Linting code using pylint."
+    - source ${conda_environment}
+    - pylint --rcfile .pylintrc --disable=$PYLINT_DISABLE_LIST ./*/
+
+lint-isort:
+  stage: lint
+  tags:
+    - landmark_sys_ci
+  script:
+    - echo "Linting code using isort."
+    - source ${conda_environment}
+    - isort --check --profile=$ISORT_PROFILE ./*/
+
+lint-black:
+  stage: lint
+  tags:
+    - landmark_sys_ci
+  script:
+    - echo "Linting code using black."
+    - source ${conda_environment}
+    - black --line-length=120 --check --exclude $BLACK_EXCLUDE_SETTINGS ./*/
+
+test-module:
+  stage: unit-test
+  tags:
+    - landmark_sys_ci
+  script:
+    - echo "Running module test..."
+    - source ${conda_environment}
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_module.sh" ${CI_PROJECT_DIR}
+
+test-gridnerf-training:
+  stage: training-test
+  tags:
+    - landmark_sys_ci
+  script:
+    - source ${conda_environment}
+    - echo "Running single device training tests..."
+    - echo ${CI_PROJECT_DIR}
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_train.sh" ${CI_PROJECT_DIR} group_train_gn
+  allow_failure: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TEST_TRAIN == "1"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE != "schedule"'
+      when: never
+
+test-instantNGP-training:
+  stage: training-test
+  tags:
+    - landmark_sys_ci
+  script:
+    - source ${conda_environment}
+    - echo "Running single device training tests..."
+    - echo ${CI_PROJECT_DIR}
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_train.sh" ${CI_PROJECT_DIR} group_train_in
+  allow_failure: true
+  needs:
+    - test-gridnerf-training
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TEST_TRAIN == "1"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE != "schedule"'
+      when: never
+
+test-nerfacto-training:
+  stage: training-test
+  tags:
+    - landmark_sys_ci
+  script:
+    - source ${conda_environment}
+    - echo "Running single device training tests..."
+    - echo ${CI_PROJECT_DIR}
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_train.sh" ${CI_PROJECT_DIR} group_train_na
+  allow_failure: true
+  needs:
+    - test-instantNGP-training
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TEST_TRAIN == "1"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE != "schedule"'
+      when: never
+
+test-origin_gs-training:
+  stage: training-test
+  tags:
+    - landmark_sys_ci
+  script:
+    - source ${conda_environment}
+    - echo "Running single device training tests..."
+    - echo ${CI_PROJECT_DIR}
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_train.sh" ${CI_PROJECT_DIR} group_train_org
+  allow_failure: true
+  needs:
+    - test-nerfacto-training
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TEST_TRAIN == "1"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE != "schedule"'
+      when: never
+
+test-scaffold_gs-training:
+  stage: training-test
+  tags:
+    - landmark_sys_ci
+  script:
+    - source ${conda_environment}
+    - echo "Running single device training tests..."
+    - echo ${CI_PROJECT_DIR}
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_train.sh" ${CI_PROJECT_DIR} group_train_sg
+  allow_failure: true
+  needs:
+    - test-origin_gs-training
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TEST_TRAIN == "1"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE != "schedule"'
+      when: never
+
+test-octree_gs-training:
+  stage: training-test
+  tags:
+    - landmark_sys_ci
+  script:
+    - source ${conda_environment}
+    - echo "Running single device training tests..."
+    - echo ${CI_PROJECT_DIR}
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_train.sh" ${CI_PROJECT_DIR} group_train_ocg
+  allow_failure: true
+  needs:
+    - test-scaffold_gs-training
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TEST_TRAIN == "1"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE != "schedule"'
+      when: never
+
+test-gridnerf:
+  stage: torch-integrity-test
+  tags:
+    - landmark_sys_ci
+  script:
+    - source ${conda_environment}
+    - echo "Running single device infer framework test..."
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_single_inference_framework.sh" ${CI_PROJECT_DIR} group_gn
+    - echo "Running multi device infer framework test in 2 gpus..."
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_multi_inference_framework.sh" ${CI_PROJECT_DIR} group_gn 2
+    - echo "Running multi device infer framework test in 4 gpus..."
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_multi_inference_framework.sh" ${CI_PROJECT_DIR} group_gn 4
+
+test-instantngp:
+  stage: torch-integrity-test
+  tags:
+    - landmark_sys_ci
+  script:
+    - source ${conda_environment}
+    - echo "Running single device infer framework test..."
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_single_inference_framework.sh" ${CI_PROJECT_DIR} group_in
+    - echo "Running multi device infer framework test in 2 gpus..."
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_multi_inference_framework.sh" ${CI_PROJECT_DIR} group_in 2
+
+test-nerfacto:
+  stage: torch-integrity-test
+  tags:
+    - landmark_sys_ci
+  script:
+    - source ${conda_environment}
+    - echo "Running single device infer framework test..."
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_single_inference_framework.sh" ${CI_PROJECT_DIR} group_nf
+    - echo "Running multi device infer framework test in 2 gpus..."
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_multi_inference_framework.sh" ${CI_PROJECT_DIR} group_nf 2
+
+test-gs:
+  stage: torch-integrity-test
+  tags:
+    - landmark_sys_ci
+  script:
+    - source ${conda_environment}
+    - echo "Running single device infer framework test..."
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_single_inference_framework.sh" ${CI_PROJECT_DIR} group_gs
+
+test-gs-in-kernel:
+  stage: kernel-integrity-test
+  tags:
+    - landmark_sys_ci
+  script:
+    - source ${conda_environment}
+    - echo "Running single device infer framework test..."
+    - ssh ${run_account}@${s_cluster_IP} "sh ${CI_PROJECT_DIR}/ci_scripts/test_kernel_single_inference_framework.sh" ${CI_PROJECT_DIR} group_gs
+
+deploy:
+  stage: deploy
+  tags:
+    - landmark_sys_ci
+  script:
+    - echo "Cleaning resource"

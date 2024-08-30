@@ -16,7 +16,7 @@ export PYTHONPATH=$PWD:$PYTHONPATH
 
 Clone the repository
 ```shell
-git clone ssh://git@gitlab.pjlab.org.cn:1122/CityLab/LandmarkSystem.git --recursive
+git clone git@github.com:InternLandMark/LandMarkSystem.git --recursive
 ```
 
 Conda-based setup method provided

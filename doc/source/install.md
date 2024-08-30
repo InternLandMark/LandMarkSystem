@@ -11,7 +11,7 @@ export PYTHONPATH=$PWD:$PYTHONPATH
 ## 环境安装
 拉取仓库
 ```shell
-git clone ssh://git@gitlab.pjlab.org.cn:1122/CityLab/LandmarkSystem.git --recursive
+git clone git@github.com:InternLandMark/LandMarkSystem.git --recursive
 ```
 提供基于conda的构建方式：
 
